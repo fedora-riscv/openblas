@@ -14,8 +14,8 @@
 # "obsoleted" features are still kept in the spec.
 
 Name:           openblas
-Version:        0.3.20
-Release:        2%{?dist}
+Version:        0.3.21
+Release:        1%{?dist}
 Summary:        An optimized BLAS library based on GotoBLAS2
 License:        BSD
 URL:            https://github.com/xianyi/OpenBLAS/
@@ -643,6 +643,9 @@ rm -rf %{buildroot}%{_libdir}/pkgconfig
 %endif
 
 %changelog
+* Mon Aug 08 2022 Ali Erdinc Koroglu <aekoroglu@fedoraproject.org> - 0.3.21-1
+- Update to 0.3.21 (RHBZ #2116398)
+
 * Fri Jul 22 2022 Fedora Release Engineering <releng@fedoraproject.org> - 0.3.20-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_37_Mass_Rebuild
 
