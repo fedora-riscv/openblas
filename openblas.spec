@@ -15,7 +15,7 @@
 
 Name:           openblas
 Version:        0.3.21
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        An optimized BLAS library based on GotoBLAS2
 License:        BSD
 URL:            https://github.com/xianyi/OpenBLAS/
@@ -26,6 +26,8 @@ Patch0:         openblas-0.2.15-system_lapack.patch
 Patch1:         openblas-0.2.5-libname.patch
 # Don't use constructor priorities on too old architectures
 Patch2:         openblas-0.2.15-constructor.patch
+# Fix SBGEMM test to work with INTERFACE64
+Patch3:         openblas-0.3.21-sbgemm-test.patch
 
 BuildRequires: make
 BuildRequires:  gcc
@@ -238,6 +240,7 @@ cd OpenBLAS-%{version}
 %if 0%{?rhel} == 5
 %patch2 -p1 -b .constructor
 %endif
+%patch3 -p1 -b .sbgemm
 
 # Fix source permissions
 find -name \*.f -exec chmod 644 {} \;
@@ -643,6 +646,10 @@ rm -rf %{buildroot}%{_libdir}/pkgconfig
 %endif
 
 %changelog
+* Wed Aug 24 2022 Honza Horak <hhorak@redhat.com> - 0.3.21-2
+- Fix SBGEMM test to work with INTERFACE64
+  Resolves: #2120974
+
 * Mon Aug 08 2022 Ali Erdinc Koroglu <aekoroglu@fedoraproject.org> - 0.3.21-1
 - Update to 0.3.21 (RHBZ #2116398)
 
