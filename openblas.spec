@@ -15,7 +15,7 @@
 
 Name:           openblas
 Version:        0.3.21
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        An optimized BLAS library based on GotoBLAS2
 License:        BSD
 URL:            https://github.com/xianyi/OpenBLAS/
@@ -28,6 +28,8 @@ Patch1:         openblas-0.2.5-libname.patch
 Patch2:         openblas-0.2.15-constructor.patch
 # Fix SBGEMM test to work with INTERFACE64
 Patch3:         openblas-0.3.21-sbgemm-test.patch
+# Supply the proper flags to the test makefile
+Patch4:         openblas-0.3.11-tests.patch
 
 BuildRequires: make
 BuildRequires:  gcc
@@ -241,6 +243,7 @@ cd OpenBLAS-%{version}
 %patch2 -p1 -b .constructor
 %endif
 %patch3 -p1 -b .sbgemm
+%patch4 -p1 -b .tests
 
 # Fix source permissions
 find -name \*.f -exec chmod 644 {} \;
@@ -646,6 +649,9 @@ rm -rf %{buildroot}%{_libdir}/pkgconfig
 %endif
 
 %changelog
+* Fri Aug 26 2022 Honza Horak <hhorak@redhat.com> - 0.3.21-3
+- Re-add flags for tests
+
 * Wed Aug 24 2022 Honza Horak <hhorak@redhat.com> - 0.3.21-2
 - Fix SBGEMM test to work with INTERFACE64
   Resolves: #2120974
