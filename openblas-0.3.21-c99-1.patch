@@ -1,0 +1,64 @@
+From f703846ad9400a8ea175cb8dd43e18c152aeab93 Mon Sep 17 00:00:00 2001
+From: Martin Kroeker <martin@ruby.chemie.uni-freiburg.de>
+Date: Sat, 13 Aug 2022 11:38:27 +0200
+Subject: [PATCH] Add function prototypes
+Content-type: text/plain
+
+---
+ exports/gensymbol    | 16 ++++++++++++++++
+ exports/gensymbol.pl | 12 ++++++++++++
+ 2 files changed, 28 insertions(+)
+
+diff --git a/exports/gensymbol b/exports/gensymbol
+index 83222a21..f05de626 100755
+--- a/exports/gensymbol
++++ b/exports/gensymbol
+@@ -4000,6 +4000,22 @@ case "$p1" in
+         no_underscore_objs="$no_underscore_objs $misc_common_objs"
+ 
+         printf 'int main(void){\n'
++        for obj in $underscore_objs; do
++            [ "$obj" != "xerbla" ] && printf 'extern void %s%s%s%s();\n' \
++                "$symbolprefix" "$obj" "$bu" "$symbolsuffix"
++        done
++
++        for obj in $need_2underscore_objs; do
++            printf 'extern void %s%s%s%s%s();\n' \
++                "$symbolprefix" "$obj" "$bu" "$bu" "$symbolsuffix"
++        done
++
++        for obj in $no_underscore_objs; do
++            printf 'extern void %s%s%s();\n' \
++                "$symbolprefix" "$obj" "$symbolsuffix"
++        done
++
++        printf '\n'
+         for obj in $underscore_objs; do
+             [ "$obj" != "xerbla" ] && printf '%s%s%s%s();\n' \
+                 "$symbolprefix" "$obj" "$bu" "$symbolsuffix"
+diff --git a/exports/gensymbol.pl b/exports/gensymbol.pl
+index ac62bc05..e38a3cc8 100644
+--- a/exports/gensymbol.pl
++++ b/exports/gensymbol.pl
+@@ -3955,6 +3955,18 @@ if ($ARGV[0] eq "linktest") {
+     @no_underscore_objs = (@no_underscore_objs, @misc_common_objs);
+ 
+     print "int main(void){\n";
++    foreach $objs (@underscore_objs) {
++        print "extern void ", $symbolprefix, $objs, $bu, $symbolsuffix, "();\n" if $objs ne "xerbla";
++    }
++
++    foreach $objs (@need_2underscore_objs) {
++        print "extern void ", $symbolprefix, $objs, $bu, $bu, $symbolsuffix, "();\n";
++    }
++
++    foreach $objs (@no_underscore_objs) {
++        print "extern void ", $symbolprefix, $objs, $symbolsuffix, "();\n";
++    }
++
+     foreach $objs (@underscore_objs) {
+         print $symbolprefix, $objs, $bu, $symbolsuffix, "();\n" if $objs ne "xerbla";
+     }
+-- 
+2.37.3
+

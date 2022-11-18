@@ -1,0 +1,62 @@
+From 101a2c77c3f3610933f450cefca3e312edab2186 Mon Sep 17 00:00:00 2001
+From: Martin Kroeker <martin@ruby.chemie.uni-freiburg.de>
+Date: Thu, 15 Sep 2022 09:19:19 +0200
+Subject: [PATCH] Fix warnings
+Content-type: text/plain
+
+---
+ kernel/x86_64/dgemm_ncopy_8_skylakex.c | 24 ++++++++++++------------
+ kernel/x86_64/omatcopy_rt.c            |  2 +-
+ 2 files changed, 13 insertions(+), 13 deletions(-)
+
+diff --git a/kernel/x86_64/dgemm_ncopy_8_skylakex.c b/kernel/x86_64/dgemm_ncopy_8_skylakex.c
+index 74b336f3..874ef68d 100644
+--- a/kernel/x86_64/dgemm_ncopy_8_skylakex.c
++++ b/kernel/x86_64/dgemm_ncopy_8_skylakex.c
+@@ -52,18 +52,18 @@ int CNAME(BLASLONG m, BLASLONG n, FLOAT * __restrict a, BLASLONG lda, FLOAT * __
+   FLOAT ctemp05, ctemp06, ctemp07, ctemp08;
+   FLOAT ctemp09, ctemp10, ctemp11, ctemp12;
+   FLOAT ctemp13, ctemp14, ctemp15, ctemp16;
+-  FLOAT ctemp17, ctemp18, ctemp19, ctemp20;
+-  FLOAT ctemp21, ctemp22, ctemp23, ctemp24;
+-  FLOAT ctemp25, ctemp26, ctemp27, ctemp28;
+-  FLOAT ctemp29, ctemp30, ctemp31, ctemp32;
+-  FLOAT ctemp33, ctemp34, ctemp35, ctemp36;
+-  FLOAT ctemp37, ctemp38, ctemp39, ctemp40;
+-  FLOAT ctemp41, ctemp42, ctemp43, ctemp44;
+-  FLOAT ctemp45, ctemp46, ctemp47, ctemp48;
+-  FLOAT ctemp49, ctemp50, ctemp51, ctemp52;
+-  FLOAT ctemp53, ctemp54, ctemp55, ctemp56;
+-  FLOAT ctemp57, ctemp58, ctemp59, ctemp60;
+-  FLOAT ctemp61, ctemp62, ctemp63, ctemp64;
++  FLOAT ctemp17 /*, ctemp18, ctemp19, ctemp20*/ ;
++  FLOAT /*ctemp21, ctemp22,*/ ctemp23, ctemp24;
++  FLOAT ctemp25 /*, ctemp26, ctemp27, ctemp28*/ ;
++  FLOAT /*ctemp29, ctemp30,*/ ctemp31, ctemp32;
++  FLOAT ctemp33 /*, ctemp34, ctemp35, ctemp36*/ ;
++  FLOAT /*ctemp37, ctemp38,*/ ctemp39, ctemp40;
++  FLOAT ctemp41 /*, ctemp42, ctemp43, ctemp44*/ ;
++  FLOAT /*ctemp45, ctemp46,*/ ctemp47, ctemp48;
++  FLOAT ctemp49 /*, ctemp50, ctemp51, ctemp52*/ ;
++  FLOAT /*ctemp53, ctemp54,*/ ctemp55, ctemp56;
++  FLOAT ctemp57 /*, ctemp58, ctemp59, ctemp60*/ ;
++  FLOAT /*ctemp61, ctemp62,*/ ctemp63, ctemp64;
+ 
+ 
+   aoffset = a;
+diff --git a/kernel/x86_64/omatcopy_rt.c b/kernel/x86_64/omatcopy_rt.c
+index e695f00c..b11893f5 100644
+--- a/kernel/x86_64/omatcopy_rt.c
++++ b/kernel/x86_64/omatcopy_rt.c
+@@ -142,7 +142,7 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+     ,"xmm0","xmm1","xmm2","xmm3","xmm4","xmm5","xmm6","xmm7","xmm8","xmm9","xmm10","xmm11","xmm12","xmm13","xmm14","xmm15");\
+ }
+ int CNAME(BLASLONG rows, BLASLONG cols, FLOAT alpha, FLOAT *a, BLASLONG lda, FLOAT *b, BLASLONG ldb){
+-  float *src, *dst, *dst_tmp, *src_base, *dst_base;
++  float *src, *dst, *dst_tmp=0, *src_base, *dst_base;
+   uint64_t src_ld_bytes = (uint64_t)lda * sizeof(float), dst_ld_bytes = (uint64_t)ldb * sizeof(float), num_rows = 0;
+   BLASLONG cols_left, rows_done; float ALPHA = alpha;
+   if(ALPHA==0.0){
+-- 
+2.37.3
+

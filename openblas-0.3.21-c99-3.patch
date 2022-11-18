@@ -1,0 +1,26 @@
+From 91110f92d218492d0efbdc1fdf34277ca45f4b36 Mon Sep 17 00:00:00 2001
+From: Martin Kroeker <martin@ruby.chemie.uni-freiburg.de>
+Date: Wed, 14 Sep 2022 14:03:31 +0200
+Subject: [PATCH] fix missing return type in function declaration
+Content-type: text/plain
+
+---
+ ctest/c_sblat1c.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/ctest/c_sblat1c.c b/ctest/c_sblat1c.c
+index 4993d31b..57e4707a 100644
+--- a/ctest/c_sblat1c.c
++++ b/ctest/c_sblat1c.c
+@@ -969,7 +969,7 @@ real *sfac;
+ 	    1.17 };
+ 
+     /* Local variables */
+-    extern /* Subroutine */ srottest_();
++    extern /* Subroutine */ void srottest_();
+     static integer i__, k, ksize;
+     extern /* Subroutine */ int stest_(), srotmtest_();
+     static integer ki, kn;
+-- 
+2.37.3
+

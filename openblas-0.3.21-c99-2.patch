@@ -1,0 +1,510 @@
+From 515cf269291bec0d43651fe7bf99a71fb074a0ad Mon Sep 17 00:00:00 2001
+From: Martin Kroeker <martin@ruby.chemie.uni-freiburg.de>
+Date: Wed, 14 Sep 2022 11:48:36 +0200
+Subject: [PATCH] Fix pointer/integer argument mismatch in calls to pow()
+Content-type: text/plain
+
+---
+ lapack-netlib/SRC/claed0.c | 4 ++--
+ lapack-netlib/SRC/claed7.c | 4 ++--
+ lapack-netlib/SRC/clalsa.c | 6 +++---
+ lapack-netlib/SRC/cstedc.c | 4 ++--
+ lapack-netlib/SRC/dlaed0.c | 4 ++--
+ lapack-netlib/SRC/dlaed7.c | 4 ++--
+ lapack-netlib/SRC/dlaeda.c | 8 ++++----
+ lapack-netlib/SRC/dlalsa.c | 6 +++---
+ lapack-netlib/SRC/dlasd0.c | 2 +-
+ lapack-netlib/SRC/dlasda.c | 4 ++--
+ lapack-netlib/SRC/dstedc.c | 4 ++--
+ lapack-netlib/SRC/slaed0.c | 4 ++--
+ lapack-netlib/SRC/slaed7.c | 4 ++--
+ lapack-netlib/SRC/slaeda.c | 8 ++++----
+ lapack-netlib/SRC/slalsa.c | 6 +++---
+ lapack-netlib/SRC/slasd0.c | 2 +-
+ lapack-netlib/SRC/slasda.c | 4 ++--
+ lapack-netlib/SRC/sstedc.c | 4 ++--
+ lapack-netlib/SRC/zlaed0.c | 4 ++--
+ lapack-netlib/SRC/zlaed7.c | 4 ++--
+ lapack-netlib/SRC/zlalsa.c | 6 +++---
+ lapack-netlib/SRC/zstedc.c | 4 ++--
+ 22 files changed, 50 insertions(+), 50 deletions(-)
+
+diff --git a/lapack-netlib/SRC/claed0.c b/lapack-netlib/SRC/claed0.c
+index 21e40839..2b696508 100644
+--- a/lapack-netlib/SRC/claed0.c
++++ b/lapack-netlib/SRC/claed0.c
+@@ -796,10 +796,10 @@ L10:
+ 
+     temp = log((real) (*n)) / log(2.f);
+     lgn = (integer) temp;
+-    if (pow_ii(&c__2, &lgn) < *n) {
++    if (pow_ii(c__2, lgn) < *n) {
+ 	++lgn;
+     }
+-    if (pow_ii(&c__2, &lgn) < *n) {
++    if (pow_ii(c__2, lgn) < *n) {
+ 	++lgn;
+     }
+     iprmpt = indxq + *n + 1;
+diff --git a/lapack-netlib/SRC/claed7.c b/lapack-netlib/SRC/claed7.c
+index 49fc9ed4..1eaa7e9c 100644
+--- a/lapack-netlib/SRC/claed7.c
++++ b/lapack-netlib/SRC/claed7.c
+@@ -864,11 +864,11 @@ f"> */
+ /*     Form the z-vector which consists of the last row of Q_1 and the */
+ /*     first row of Q_2. */
+ 
+-    ptr = pow_ii(&c__2, tlvls) + 1;
++    ptr = pow_ii(c__2, *tlvls) + 1;
+     i__1 = *curlvl - 1;
+     for (i__ = 1; i__ <= i__1; ++i__) {
+ 	i__2 = *tlvls - i__;
+-	ptr += pow_ii(&c__2, &i__2);
++	ptr += pow_ii(c__2, i__2);
+ /* L10: */
+     }
+     curr = ptr + *curpbm;
+diff --git a/lapack-netlib/SRC/clalsa.c b/lapack-netlib/SRC/clalsa.c
+index 4bc3830a..2ef3e123 100644
+--- a/lapack-netlib/SRC/clalsa.c
++++ b/lapack-netlib/SRC/clalsa.c
+@@ -1051,7 +1051,7 @@ f"> */
+ /*     Finally go through the left singular vector matrices of all */
+ /*     the other subproblems bottom-up on the tree. */
+ 
+-    j = pow_ii(&c__2, &nlvl);
++    j = pow_ii(c__2, nlvl);
+     sqre = 0;
+ 
+     for (lvl = nlvl; lvl >= 1; --lvl) {
+@@ -1065,7 +1065,7 @@ f"> */
+ 	    ll = 1;
+ 	} else {
+ 	    i__1 = lvl - 1;
+-	    lf = pow_ii(&c__2, &i__1);
++	    lf = pow_ii(c__2, i__1);
+ 	    ll = (lf << 1) - 1;
+ 	}
+ 	i__1 = ll;
+@@ -1110,7 +1110,7 @@ L170:
+ 	    ll = 1;
+ 	} else {
+ 	    i__2 = lvl - 1;
+-	    lf = pow_ii(&c__2, &i__2);
++	    lf = pow_ii(c__2, i__2);
+ 	    ll = (lf << 1) - 1;
+ 	}
+ 	i__2 = lf;
+diff --git a/lapack-netlib/SRC/cstedc.c b/lapack-netlib/SRC/cstedc.c
+index 437c39e9..8f047d1c 100644
+--- a/lapack-netlib/SRC/cstedc.c
++++ b/lapack-netlib/SRC/cstedc.c
+@@ -836,10 +836,10 @@ f"> */
+ 	    lrwmin = *n - 1 << 1;
+ 	} else if (icompz == 1) {
+ 	    lgn = (integer) (log((real) (*n)) / log(2.f));
+-	    if (pow_ii(&c__2, &lgn) < *n) {
++	    if (pow_ii(c__2, lgn) < *n) {
+ 		++lgn;
+ 	    }
+-	    if (pow_ii(&c__2, &lgn) < *n) {
++	    if (pow_ii(c__2, lgn) < *n) {
+ 		++lgn;
+ 	    }
+ 	    lwmin = *n * *n;
+diff --git a/lapack-netlib/SRC/dlaed0.c b/lapack-netlib/SRC/dlaed0.c
+index 95e39b0d..74e58dd2 100644
+--- a/lapack-netlib/SRC/dlaed0.c
++++ b/lapack-netlib/SRC/dlaed0.c
+@@ -827,10 +827,10 @@ L10:
+ 
+ 	temp = log((doublereal) (*n)) / log(2.);
+ 	lgn = (integer) temp;
+-	if (pow_ii(&c__2, &lgn) < *n) {
++	if (pow_ii(c__2, lgn) < *n) {
+ 	    ++lgn;
+ 	}
+-	if (pow_ii(&c__2, &lgn) < *n) {
++	if (pow_ii(c__2, lgn) < *n) {
+ 	    ++lgn;
+ 	}
+ 	iprmpt = indxq + *n + 1;
+diff --git a/lapack-netlib/SRC/dlaed7.c b/lapack-netlib/SRC/dlaed7.c
+index fd851526..d23a72be 100644
+--- a/lapack-netlib/SRC/dlaed7.c
++++ b/lapack-netlib/SRC/dlaed7.c
+@@ -885,11 +885,11 @@ f"> */
+ /*     Form the z-vector which consists of the last row of Q_1 and the */
+ /*     first row of Q_2. */
+ 
+-    ptr = pow_ii(&c__2, tlvls) + 1;
++    ptr = pow_ii(c__2, *tlvls) + 1;
+     i__1 = *curlvl - 1;
+     for (i__ = 1; i__ <= i__1; ++i__) {
+ 	i__2 = *tlvls - i__;
+-	ptr += pow_ii(&c__2, &i__2);
++	ptr += pow_ii(c__2, i__2);
+ /* L10: */
+     }
+     curr = ptr + *curpbm;
+diff --git a/lapack-netlib/SRC/dlaeda.c b/lapack-netlib/SRC/dlaeda.c
+index f4bb214d..202e1b63 100644
+--- a/lapack-netlib/SRC/dlaeda.c
++++ b/lapack-netlib/SRC/dlaeda.c
+@@ -754,7 +754,7 @@ f"> */
+ /*     scheme */
+ 
+     i__1 = *curlvl - 1;
+-    curr = ptr + *curpbm * pow_ii(&c__2, curlvl) + pow_ii(&c__2, &i__1) - 1;
++    curr = ptr + *curpbm * pow_ii(c__2, *curlvl) + pow_ii(c__2, i__1) - 1;
+ 
+ /*     Determine size of these matrices.  We add HALF to the value of */
+ /*     the SQRT in case the machine underestimates one of these square */
+@@ -781,12 +781,12 @@ f"> */
+ /*     rotations and permutation and then multiplying the center matrices */
+ /*     against the current Z. */
+ 
+-    ptr = pow_ii(&c__2, tlvls) + 1;
++    ptr = pow_ii(c__2, *tlvls) + 1;
+     i__1 = *curlvl - 1;
+     for (k = 1; k <= i__1; ++k) {
+ 	i__2 = *curlvl - k;
+ 	i__3 = *curlvl - k - 1;
+-	curr = ptr + *curpbm * pow_ii(&c__2, &i__2) + pow_ii(&c__2, &i__3) - 
++	curr = ptr + *curpbm * pow_ii(c__2, i__2) + pow_ii(c__2, i__3) - 
+ 		1;
+ 	psiz1 = prmptr[curr + 1] - prmptr[curr];
+ 	psiz2 = prmptr[curr + 2] - prmptr[curr + 1];
+@@ -847,7 +847,7 @@ f"> */
+ 		c__1);
+ 
+ 	i__2 = *tlvls - k;
+-	ptr += pow_ii(&c__2, &i__2);
++	ptr += pow_ii(c__2, i__2);
+ /* L70: */
+     }
+ 
+diff --git a/lapack-netlib/SRC/dlalsa.c b/lapack-netlib/SRC/dlalsa.c
+index 891ed66a..4d5c347c 100644
+--- a/lapack-netlib/SRC/dlalsa.c
++++ b/lapack-netlib/SRC/dlalsa.c
+@@ -951,7 +951,7 @@ f"> */
+ /*     Finally go through the left singular vector matrices of all */
+ /*     the other subproblems bottom-up on the tree. */
+ 
+-    j = pow_ii(&c__2, &nlvl);
++    j = pow_ii(c__2, nlvl);
+     sqre = 0;
+ 
+     for (lvl = nlvl; lvl >= 1; --lvl) {
+@@ -965,7 +965,7 @@ f"> */
+ 	    ll = 1;
+ 	} else {
+ 	    i__1 = lvl - 1;
+-	    lf = pow_ii(&c__2, &i__1);
++	    lf = pow_ii(c__2, i__1);
+ 	    ll = (lf << 1) - 1;
+ 	}
+ 	i__1 = ll;
+@@ -1010,7 +1010,7 @@ L50:
+ 	    ll = 1;
+ 	} else {
+ 	    i__2 = lvl - 1;
+-	    lf = pow_ii(&c__2, &i__2);
++	    lf = pow_ii(c__2, i__2);
+ 	    ll = (lf << 1) - 1;
+ 	}
+ 	i__2 = lf;
+diff --git a/lapack-netlib/SRC/dlasd0.c b/lapack-netlib/SRC/dlasd0.c
+index c702665b..0f88527e 100644
+--- a/lapack-netlib/SRC/dlasd0.c
++++ b/lapack-netlib/SRC/dlasd0.c
+@@ -824,7 +824,7 @@ f"> */
+ 	    ll = 1;
+ 	} else {
+ 	    i__1 = lvl - 1;
+-	    lf = pow_ii(&c__2, &i__1);
++	    lf = pow_ii(c__2, i__1);
+ 	    ll = (lf << 1) - 1;
+ 	}
+ 	i__1 = ll;
+diff --git a/lapack-netlib/SRC/dlasda.c b/lapack-netlib/SRC/dlasda.c
+index 72f9d55f..a9190f80 100644
+--- a/lapack-netlib/SRC/dlasda.c
++++ b/lapack-netlib/SRC/dlasda.c
+@@ -1027,7 +1027,7 @@ f"> */
+ 
+ /*     Now conquer each subproblem bottom-up. */
+ 
+-    j = pow_ii(&c__2, &nlvl);
++    j = pow_ii(c__2, nlvl);
+     for (lvl = nlvl; lvl >= 1; --lvl) {
+ 	lvl2 = (lvl << 1) - 1;
+ 
+@@ -1039,7 +1039,7 @@ f"> */
+ 	    ll = 1;
+ 	} else {
+ 	    i__1 = lvl - 1;
+-	    lf = pow_ii(&c__2, &i__1);
++	    lf = pow_ii(c__2, i__1);
+ 	    ll = (lf << 1) - 1;
+ 	}
+ 	i__1 = ll;
+diff --git a/lapack-netlib/SRC/dstedc.c b/lapack-netlib/SRC/dstedc.c
+index ef2eeabe..56511d6c 100644
+--- a/lapack-netlib/SRC/dstedc.c
++++ b/lapack-netlib/SRC/dstedc.c
+@@ -806,10 +806,10 @@ f"> */
+ 	    lwmin = *n - 1 << 1;
+ 	} else {
+ 	    lgn = (integer) (log((doublereal) (*n)) / log(2.));
+-	    if (pow_ii(&c__2, &lgn) < *n) {
++	    if (pow_ii(c__2, lgn) < *n) {
+ 		++lgn;
+ 	    }
+-	    if (pow_ii(&c__2, &lgn) < *n) {
++	    if (pow_ii(c__2, lgn) < *n) {
+ 		++lgn;
+ 	    }
+ 	    if (icompz == 1) {
+diff --git a/lapack-netlib/SRC/slaed0.c b/lapack-netlib/SRC/slaed0.c
+index 33f7134c..4c523090 100644
+--- a/lapack-netlib/SRC/slaed0.c
++++ b/lapack-netlib/SRC/slaed0.c
+@@ -823,10 +823,10 @@ L10:
+ 
+ 	temp = log((real) (*n)) / log(2.f);
+ 	lgn = (integer) temp;
+-	if (pow_ii(&c__2, &lgn) < *n) {
++	if (pow_ii(c__2, lgn) < *n) {
+ 	    ++lgn;
+ 	}
+-	if (pow_ii(&c__2, &lgn) < *n) {
++	if (pow_ii(c__2, lgn) < *n) {
+ 	    ++lgn;
+ 	}
+ 	iprmpt = indxq + *n + 1;
+diff --git a/lapack-netlib/SRC/slaed7.c b/lapack-netlib/SRC/slaed7.c
+index 210d796d..22fcaf76 100644
+--- a/lapack-netlib/SRC/slaed7.c
++++ b/lapack-netlib/SRC/slaed7.c
+@@ -883,11 +883,11 @@ f"> */
+ /*     Form the z-vector which consists of the last row of Q_1 and the */
+ /*     first row of Q_2. */
+ 
+-    ptr = pow_ii(&c__2, tlvls) + 1;
++    ptr = pow_ii(c__2, *tlvls) + 1;
+     i__1 = *curlvl - 1;
+     for (i__ = 1; i__ <= i__1; ++i__) {
+ 	i__2 = *tlvls - i__;
+-	ptr += pow_ii(&c__2, &i__2);
++	ptr += pow_ii(c__2, i__2);
+ /* L10: */
+     }
+     curr = ptr + *curpbm;
+diff --git a/lapack-netlib/SRC/slaeda.c b/lapack-netlib/SRC/slaeda.c
+index 7edaf8a7..3806427c 100644
+--- a/lapack-netlib/SRC/slaeda.c
++++ b/lapack-netlib/SRC/slaeda.c
+@@ -753,7 +753,7 @@ f"> */
+ /*     scheme */
+ 
+     i__1 = *curlvl - 1;
+-    curr = ptr + *curpbm * pow_ii(&c__2, curlvl) + pow_ii(&c__2, &i__1) - 1;
++    curr = ptr + *curpbm * pow_ii(c__2, *curlvl) + pow_ii(c__2, i__1) - 1;
+ 
+ /*     Determine size of these matrices.  We add HALF to the value of */
+ /*     the SQRT in case the machine underestimates one of these square */
+@@ -779,12 +779,12 @@ f"> */
+ /*     rotations and permutation and then multiplying the center matrices */
+ /*     against the current Z. */
+ 
+-    ptr = pow_ii(&c__2, tlvls) + 1;
++    ptr = pow_ii(c__2, *tlvls) + 1;
+     i__1 = *curlvl - 1;
+     for (k = 1; k <= i__1; ++k) {
+ 	i__2 = *curlvl - k;
+ 	i__3 = *curlvl - k - 1;
+-	curr = ptr + *curpbm * pow_ii(&c__2, &i__2) + pow_ii(&c__2, &i__3) - 
++	curr = ptr + *curpbm * pow_ii(c__2, i__2) + pow_ii(c__2, i__3) - 
+ 		1;
+ 	psiz1 = prmptr[curr + 1] - prmptr[curr];
+ 	psiz2 = prmptr[curr + 2] - prmptr[curr + 1];
+@@ -844,7 +844,7 @@ f"> */
+ 		c__1);
+ 
+ 	i__2 = *tlvls - k;
+-	ptr += pow_ii(&c__2, &i__2);
++	ptr += pow_ii(c__2, i__2);
+ /* L70: */
+     }
+ 
+diff --git a/lapack-netlib/SRC/slalsa.c b/lapack-netlib/SRC/slalsa.c
+index 53da2c7b..77a79b80 100644
+--- a/lapack-netlib/SRC/slalsa.c
++++ b/lapack-netlib/SRC/slalsa.c
+@@ -946,7 +946,7 @@ f"> */
+ /*     Finally go through the left singular vector matrices of all */
+ /*     the other subproblems bottom-up on the tree. */
+ 
+-    j = pow_ii(&c__2, &nlvl);
++    j = pow_ii(c__2, nlvl);
+     sqre = 0;
+ 
+     for (lvl = nlvl; lvl >= 1; --lvl) {
+@@ -960,7 +960,7 @@ f"> */
+ 	    ll = 1;
+ 	} else {
+ 	    i__1 = lvl - 1;
+-	    lf = pow_ii(&c__2, &i__1);
++	    lf = pow_ii(c__2, i__1);
+ 	    ll = (lf << 1) - 1;
+ 	}
+ 	i__1 = ll;
+@@ -1005,7 +1005,7 @@ L50:
+ 	    ll = 1;
+ 	} else {
+ 	    i__2 = lvl - 1;
+-	    lf = pow_ii(&c__2, &i__2);
++	    lf = pow_ii(c__2, i__2);
+ 	    ll = (lf << 1) - 1;
+ 	}
+ 	i__2 = lf;
+diff --git a/lapack-netlib/SRC/slasd0.c b/lapack-netlib/SRC/slasd0.c
+index aa553579..be1a7419 100644
+--- a/lapack-netlib/SRC/slasd0.c
++++ b/lapack-netlib/SRC/slasd0.c
+@@ -821,7 +821,7 @@ f"> */
+ 	    ll = 1;
+ 	} else {
+ 	    i__1 = lvl - 1;
+-	    lf = pow_ii(&c__2, &i__1);
++	    lf = pow_ii(c__2, i__1);
+ 	    ll = (lf << 1) - 1;
+ 	}
+ 	i__1 = ll;
+diff --git a/lapack-netlib/SRC/slasda.c b/lapack-netlib/SRC/slasda.c
+index 71424c3f..1d336d1c 100644
+--- a/lapack-netlib/SRC/slasda.c
++++ b/lapack-netlib/SRC/slasda.c
+@@ -1023,7 +1023,7 @@ f"> */
+ 
+ /*     Now conquer each subproblem bottom-up. */
+ 
+-    j = pow_ii(&c__2, &nlvl);
++    j = pow_ii(c__2, nlvl);
+     for (lvl = nlvl; lvl >= 1; --lvl) {
+ 	lvl2 = (lvl << 1) - 1;
+ 
+@@ -1035,7 +1035,7 @@ f"> */
+ 	    ll = 1;
+ 	} else {
+ 	    i__1 = lvl - 1;
+-	    lf = pow_ii(&c__2, &i__1);
++	    lf = pow_ii(c__2, i__1);
+ 	    ll = (lf << 1) - 1;
+ 	}
+ 	i__1 = ll;
+diff --git a/lapack-netlib/SRC/sstedc.c b/lapack-netlib/SRC/sstedc.c
+index 46ed15a1..61ad3dd3 100644
+--- a/lapack-netlib/SRC/sstedc.c
++++ b/lapack-netlib/SRC/sstedc.c
+@@ -804,10 +804,10 @@ f"> */
+ 	    lwmin = *n - 1 << 1;
+ 	} else {
+ 	    lgn = (integer) (log((real) (*n)) / log(2.f));
+-	    if (pow_ii(&c__2, &lgn) < *n) {
++	    if (pow_ii(c__2, lgn) < *n) {
+ 		++lgn;
+ 	    }
+-	    if (pow_ii(&c__2, &lgn) < *n) {
++	    if (pow_ii(c__2, lgn) < *n) {
+ 		++lgn;
+ 	    }
+ 	    if (icompz == 1) {
+diff --git a/lapack-netlib/SRC/zlaed0.c b/lapack-netlib/SRC/zlaed0.c
+index 37bd12b0..2b25f6e4 100644
+--- a/lapack-netlib/SRC/zlaed0.c
++++ b/lapack-netlib/SRC/zlaed0.c
+@@ -793,10 +793,10 @@ L10:
+ 
+     temp = log((doublereal) (*n)) / log(2.);
+     lgn = (integer) temp;
+-    if (pow_ii(&c__2, &lgn) < *n) {
++    if (pow_ii(c__2, lgn) < *n) {
+ 	++lgn;
+     }
+-    if (pow_ii(&c__2, &lgn) < *n) {
++    if (pow_ii(c__2, lgn) < *n) {
+ 	++lgn;
+     }
+     iprmpt = indxq + *n + 1;
+diff --git a/lapack-netlib/SRC/zlaed7.c b/lapack-netlib/SRC/zlaed7.c
+index 09305191..8665ee12 100644
+--- a/lapack-netlib/SRC/zlaed7.c
++++ b/lapack-netlib/SRC/zlaed7.c
+@@ -864,11 +864,11 @@ f"> */
+ /*     Form the z-vector which consists of the last row of Q_1 and the */
+ /*     first row of Q_2. */
+ 
+-    ptr = pow_ii(&c__2, tlvls) + 1;
++    ptr = pow_ii(c__2, *tlvls) + 1;
+     i__1 = *curlvl - 1;
+     for (i__ = 1; i__ <= i__1; ++i__) {
+ 	i__2 = *tlvls - i__;
+-	ptr += pow_ii(&c__2, &i__2);
++	ptr += pow_ii(c__2, i__2);
+ /* L10: */
+     }
+     curr = ptr + *curpbm;
+diff --git a/lapack-netlib/SRC/zlalsa.c b/lapack-netlib/SRC/zlalsa.c
+index d17016e7..cd0819c3 100644
+--- a/lapack-netlib/SRC/zlalsa.c
++++ b/lapack-netlib/SRC/zlalsa.c
+@@ -1051,7 +1051,7 @@ f"> */
+ /*     Finally go through the left singular vector matrices of all */
+ /*     the other subproblems bottom-up on the tree. */
+ 
+-    j = pow_ii(&c__2, &nlvl);
++    j = pow_ii(c__2, nlvl);
+     sqre = 0;
+ 
+     for (lvl = nlvl; lvl >= 1; --lvl) {
+@@ -1065,7 +1065,7 @@ f"> */
+ 	    ll = 1;
+ 	} else {
+ 	    i__1 = lvl - 1;
+-	    lf = pow_ii(&c__2, &i__1);
++	    lf = pow_ii(c__2, i__1);
+ 	    ll = (lf << 1) - 1;
+ 	}
+ 	i__1 = ll;
+@@ -1110,7 +1110,7 @@ L170:
+ 	    ll = 1;
+ 	} else {
+ 	    i__2 = lvl - 1;
+-	    lf = pow_ii(&c__2, &i__2);
++	    lf = pow_ii(c__2, i__2);
+ 	    ll = (lf << 1) - 1;
+ 	}
+ 	i__2 = lf;
+diff --git a/lapack-netlib/SRC/zstedc.c b/lapack-netlib/SRC/zstedc.c
+index 4cfc4184..55baba2d 100644
+--- a/lapack-netlib/SRC/zstedc.c
++++ b/lapack-netlib/SRC/zstedc.c
+@@ -836,10 +836,10 @@ f"> */
+ 	    lrwmin = *n - 1 << 1;
+ 	} else if (icompz == 1) {
+ 	    lgn = (integer) (log((doublereal) (*n)) / log(2.));
+-	    if (pow_ii(&c__2, &lgn) < *n) {
++	    if (pow_ii(c__2, lgn) < *n) {
+ 		++lgn;
+ 	    }
+-	    if (pow_ii(&c__2, &lgn) < *n) {
++	    if (pow_ii(c__2, lgn) < *n) {
+ 		++lgn;
+ 	    }
+ 	    lwmin = *n * *n;
+-- 
+2.37.3
+
