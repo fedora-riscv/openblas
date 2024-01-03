@@ -15,7 +15,7 @@
 
 Name:           openblas
 Version:        0.3.21
-Release:        5.rv64%{?dist}
+Release:        6.rv64%{?dist}
 Summary:        An optimized BLAS library based on GotoBLAS2
 License:        BSD
 URL:            https://github.com/xianyi/OpenBLAS/
@@ -666,6 +666,9 @@ rm -rf %{buildroot}%{_libdir}/pkgconfig
 %endif
 
 %changelog
+* Thu Jul 20 2023 Fedora Release Engineering <releng@fedoraproject.org> - 0.3.21-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_39_Mass_Rebuild
+
 * Tue May 09 2023 Liu Yang <Yang.Liu.sn@gmail.com> - 0.3.21-5.rv64
 - Cherry-pick riscv64 support for Fedora 38 riscv64 rebuild.
 
